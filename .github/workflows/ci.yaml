@@ -103,7 +103,7 @@ jobs:
           SHORT_SHA: ${{ github.sha }}
         run: |
           cd gitops/k8s/overlays/dev
-          SHORT_SHA=${SHORT_SHA::&}
+          SHORT_SHA=${SHORT_SHA::7}
           kustomize edit set image simpleapp-api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${SHORT_SHA}
 
       - name: Commit and push
