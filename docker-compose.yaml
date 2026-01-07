@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:18.1-alpine
+    container_name: simpleapp-postgres
+    environment:
+      POSTGRES_DB: simpleapp_db
+      POSTGRES_USER: simpleapp
+      POSTGRES_PASSWORD: simpleapppass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U simpleapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: simpleapp-api
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: simpleapp_db
+      DB_USERNAME: simpleapp
+      DB_PASSWORD: simpleapppass
+      APP_ENVIRONMENT: local
+    ports:
+      - "8082:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
