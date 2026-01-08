@@ -3,20 +3,12 @@ package com.atychkivskyy.simpleapp.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Product {
 
     @Id
@@ -39,6 +31,10 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public Product() {
+        // JPA
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -48,5 +44,41 @@ public class Product {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public @NotBlank(message = "Name is required") String getName() {
+        return name;
+    }
+
+    public void setName(@NotBlank(message = "Name is required") String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public @Positive(message = "Price must be positive") BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(@Positive(message = "Price must be positive") BigDecimal price) {
+        this.price = price;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
