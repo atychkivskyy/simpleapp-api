@@ -15,7 +15,7 @@ env:
 jobs:
   test:
     name: Test
-    runs-on: [self-hosted, linux, k8s]
+    runs-on: [ self-hosted, linux, k8s ]
 
     steps:
       - name: Checkout code
@@ -41,7 +41,7 @@ jobs:
   build-and-push:
     name: Build and Push Image
     needs: test
-    runs-on: [self-hosted, linux, k8s]
+    runs-on: [ self-hosted, linux, k8s ]
     if: github.event_name == 'push'
     outputs:
       image-tag: ${{ steps.meta.outputs.version }}
@@ -91,7 +91,7 @@ jobs:
   update-gitops:
     name: Update GitOps Repository
     needs: build-and-push
-    runs-on: [self-hosted, linux, k8s]
+    runs-on: [ self-hosted, linux, k8s ]
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -101,6 +101,9 @@ jobs:
           repository: ${{ github.repository_owner }}/simpleapp-gitops
           token: ${{ secrets.GITOPS_PAT }}
           path: gitops
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v2
 
       - name: Update image tag
         env:
